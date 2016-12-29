@@ -22,6 +22,19 @@ set(CAFFE_TARGET_VERSION "1.0.0-rc3" CACHE STRING "Caffe logical version")
 set(CAFFE_TARGET_SOVERSION "1.0.0-rc3" CACHE STRING "Caffe soname version")
 add_definitions(-DCAFFE_VERSION=${CAFFE_TARGET_VERSION})
 
+# Search packages for host system instead of packages for target system
+# in case of cross compilation these macro should be defined by toolchain file
+if(NOT COMMAND find_host_package)
+  macro(find_host_package)
+    find_package(${ARGN})
+  endmacro()
+endif()
+if(NOT COMMAND find_host_program)
+  macro(find_host_program)
+    find_program(${ARGN})
+  endmacro()
+endif()
+
 # ---[ Using cmake scripts and modules
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 
@@ -89,6 +102,13 @@ if(MSVC AND BUILD_SHARED_LIBS)
   message(WARNING "Some tests (solvers) will fail when building as a shared library with MSVC")
 endif()
 
+caffe_option(USE_HDF5 "Build with hdf5" ON)
+
+if(ANDROID)
+  set(CMAKE_FIND_LIBRARY_SUFFIXES ".a;.so")
+  caffe_enable_cpp11_support()
+endif()
+
 # ---[ Dependencies
 include(cmake/Dependencies.cmake)
 
@@ -153,6 +173,7 @@ add_subdirectory(src/gtest)
 add_subdirectory(src/caffe)
 add_subdirectory(tools)
 add_subdirectory(examples)
+add_subdirectory(android)
 add_subdirectory(python)
 add_subdirectory(matlab)
 add_subdirectory(docs)
