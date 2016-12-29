@@ -1,3 +1,4 @@
+#ifdef USE_HDF5
 /*
 TODO:
 - load file in a separate thread ("prefetch")
@@ -61,10 +62,10 @@ void HDF5DataLayer<Dtype>::LoadHDF5FileData(const char* filename) {
   // Shuffle if needed.
   if (this->layer_param_.hdf5_data_param().shuffle()) {
     std::random_shuffle(data_permutation_.begin(), data_permutation_.end());
-    DLOG(INFO) << "Successfully loaded " << hdf_blobs_[0]->shape(0)
+    DLOG(INFO) << "Successully loaded " << hdf_blobs_[0]->shape(0)
                << " rows (shuffled)";
   } else {
-    DLOG(INFO) << "Successfully loaded " << hdf_blobs_[0]->shape(0) << " rows";
+    DLOG(INFO) << "Successully loaded " << hdf_blobs_[0]->shape(0) << " rows";
   }
 }
 
@@ -164,3 +165,4 @@ INSTANTIATE_CLASS(HDF5DataLayer);
 REGISTER_LAYER_CLASS(HDF5Data);
 
 }  // namespace caffe
+#endif  // USE_HDF5
