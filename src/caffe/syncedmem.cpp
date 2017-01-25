@@ -214,6 +214,9 @@ inline void SyncedMemory::to_gpu() {
                                   true,
                                   CL_MAP_READ | CL_MAP_WRITE,
                                   0, size_, 0, NULL, NULL, NULL);
+            LOG(INFO) << "mapped_ptr: " << mapped_ptr;
+            LOG(INFO) << "cpu_ptr_: " << cpu_ptr_;
+
             CHECK_EQ(mapped_ptr, cpu_ptr_)
               << "Device claims it support zero copy"
               << " but failed to create correct user ptr buffer";
