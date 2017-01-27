@@ -57,7 +57,8 @@ void device::Init() {
 
     LOG(INFO) << "CL_DEVICE_HOST_UNIFIED_MEMORY: " << host_unified;
 
-    host_unified_ = host_unified;
+//    host_unified_ = host_unified;
+    host_unified_ = false;
     SetProgram();
 
     for (int q = 0; q < GREENTEA_QUEUE_COUNT - 1; ++q) {
