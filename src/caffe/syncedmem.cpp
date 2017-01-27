@@ -196,10 +196,14 @@ inline void SyncedMemory::to_gpu() {
         ctx.get_queue().finish();
         cl_int err;
         if (ctx.devices()[0].type() == CL_DEVICE_TYPE_CPU) {
+          LOG(INFO) << "USE_GREENTEA: case UNINITIALIZED: CL_DEVICE_TYPE_CPU ";
+
           cl_gpu_mem_ = clCreateBuffer(ctx.handle().get(),
                      CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR,
                      size_, nullptr, &err);
         } else if (device_->is_host_unified()) {
+            LOG(INFO) << "USE_GREENTEA: case UNINITIALIZED: is_host_unified: ";
+
             size_t zero_copy_size = (size_ + OPENCL_CACHE_ALIGN - 1)
                                     & ~(OPENCL_CACHE_ALIGN - 1);
             CaffeMallocHost(&cpu_ptr_, zero_copy_size, device_);
@@ -208,6 +212,7 @@ inline void SyncedMemory::to_gpu() {
             cl_gpu_mem_ = clCreateBuffer(ctx.handle().get(),
                               CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
                               zero_copy_size, cpu_ptr_, &err);
+            LOG(INFO) << "cl_gpu_mem_: " << cl_gpu_mem_;
             void *mapped_ptr = clEnqueueMapBuffer(
                                   ctx.get_queue().handle().get(),
                                   cl_gpu_mem_,
@@ -265,19 +270,28 @@ inline void SyncedMemory::to_gpu() {
         if (gpu_ptr_ == nullptr) {
           cl_int err;
           if (ctx.devices()[0].type() == CL_DEVICE_TYPE_CPU) {
+            LOG(INFO) << "USE_GREENTEA: case UNINITIALIZED: CL_DEVICE_TYPE_CPU";
+
             cl_gpu_mem_ = clCreateBuffer(
                 ctx.handle().get(), CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR,
                 size_, nullptr, &err);
           } else if (ZEROCOPY_SUPPORTED(device_, cpu_ptr_, size_)) {
+              LOG(INFO) << "USE_GREENTEA: case HEAD_AT_CPU: ZEROCOPY_SUPPORTED";
+
               cl_gpu_mem_ = clCreateBuffer(ctx.handle().get(),
                                CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR,
                                size_, cpu_ptr_, &err);
+              LOG(INFO) << "cl_gpu_mem_: " << cl_gpu_mem_;
+
               void *mapped_ptr = clEnqueueMapBuffer(
                                     ctx.get_queue().handle().get(),
                                     (cl_mem) cl_gpu_mem_,
                                     true,
                                     CL_MAP_READ | CL_MAP_WRITE,
                                     0, size_, 0, NULL, NULL, NULL);
+              LOG(INFO) << "mapped_ptr: " << mapped_ptr;
+              LOG(INFO) << "cpu_ptr_: " << cpu_ptr_;
+
               CHECK_EQ(mapped_ptr, cpu_ptr_)
                 << "Device claims it support zero copy"
                 << " but failed to create correct user ptr buffer";

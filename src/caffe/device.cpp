@@ -55,6 +55,8 @@ void device::Init() {
                     CL_DEVICE_HOST_UNIFIED_MEMORY,
                     sizeof(cl_bool), &host_unified, NULL);
 
+    LOG(INFO) << "CL_DEVICE_HOST_UNIFIED_MEMORY: " << host_unified;
+
     host_unified_ = host_unified;
     SetProgram();
 
