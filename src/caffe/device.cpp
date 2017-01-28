@@ -53,6 +53,7 @@ void device::Init() {
 
 #ifdef DISABLE_DEVICE_HOST_UNIFIED_MEMORY
     host_unified_ = false;
+    LOG(INFO) << "CL_DEVICE_HOST_UNIFIED_MEMORY: disabled";
 #else
     cl_bool host_unified;
     clGetDeviceInfo(ctx.devices()[0].id(),
