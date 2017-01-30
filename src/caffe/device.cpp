@@ -62,10 +62,14 @@ void device::Init() {
     LOG(INFO) << "CL_DEVICE_HOST_UNIFIED_MEMORY: " << host_unified;
     host_unified_ = host_unified;
 #endif  // DISABLE_DEVICE_HOST_UNIFIED_MEMORY
+    LOG(INFO) << "Before SetProgram()";
     SetProgram();
+    LOG(INFO) << "AfterSetProgram()";
 
     for (int q = 0; q < GREENTEA_QUEUE_COUNT - 1; ++q) {
+      LOG(INFO) << "Before ctx.devices()[0]";
       ctx.add_queue(ctx.devices()[0]);
+      LOG(INFO) << "After ctx.devices()[0]";
     }
 #endif  // USE_GREENTEA
   }

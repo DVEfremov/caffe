@@ -5234,8 +5234,10 @@ viennacl::ocl::program & RegisterKernels(viennacl::ocl::context *ctx) {
 #ifdef USE_FFT
   ctx->build_options("-DFFT");
 #endif
+  LOG(INFO) << "Before add_program(kernel_program)";
   viennacl::ocl::program &program = ctx->add_program(kernel_program,
       "kernel_program");
+  LOG(INFO) << "After add_program(kernel_program)";
   return program;
 }
 viennacl::ocl::program & submit_conv_spatial_program(
