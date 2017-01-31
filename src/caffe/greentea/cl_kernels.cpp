@@ -5235,6 +5235,7 @@ viennacl::ocl::program & RegisterKernels(viennacl::ocl::context *ctx) {
   ctx->build_options("-DFFT");
 #endif
   LOG(INFO) << "Before add_program(kernel_program)";
+
   viennacl::ocl::program &program = ctx->add_program(kernel_program,
       "kernel_program");
   LOG(INFO) << "After add_program(kernel_program)";
