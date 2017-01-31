@@ -18,8 +18,8 @@ endif()
 project(Caffe C CXX)
 
 # ---[ Caffe version
-set(CAFFE_TARGET_VERSION "1.0.0-rc3" CACHE STRING "Caffe logical version")
-set(CAFFE_TARGET_SOVERSION "1.0.0-rc3" CACHE STRING "Caffe soname version")
+set(CAFFE_TARGET_VERSION "1.0.0-rc4" CACHE STRING "Caffe logical version")
+set(CAFFE_TARGET_SOVERSION "1.0.0-rc4" CACHE STRING "Caffe soname version")
 add_definitions(-DCAFFE_VERSION=${CAFFE_TARGET_VERSION})
 
 # Search packages for host system instead of packages for target system
@@ -46,6 +46,7 @@ include(cmake/Misc.cmake)
 include(cmake/Summary.cmake)
 include(cmake/ConfigGen.cmake)
 include(cmake/WindowsCreateLinkHeader.cmake)
+include(cmake/TargetResolvePrerequesites.cmake)
 
 # ---[ Options
 caffe_option(CPU_ONLY "Build Caffe without CUDA and OpenCL support" OFF)
@@ -92,8 +93,14 @@ if(USE_ISAAC)
 endif()
 
 caffe_option(protobuf_MODULE_COMPATIBLE "Make the protobuf-config.cmake compatible with the module mode" ON IF MSVC)
+caffe_option(COPY_PREREQUISITES "Copy the prerequisites next to each executable or shared library directory" ON IF MSVC)
+caffe_option(INSTALL_PREREQUISITES "Install the prerequisites next to each executable or shared library directory" ON IF MSVC)
 
 if(MSVC AND BUILD_SHARED_LIBS)
+  if(CMAKE_GENERATOR MATCHES "Visual Studio")
+    # see issue https://gitlab.kitware.com/cmake/cmake/issues/16552#note_215236
+    message(FATAL_ERROR "The Visual Studio generator cannot build a shared library. Use the Ninja generator instead.")
+  endif()
   # Some tests (solver tests) fail when caffe is built as a shared library. The problem comes
   # from protobuf that has a global static empty_string_ variable. Since caffe and test.testbin
   # link to a static protobuf library both end up with their own instance of the empty_string_
@@ -108,6 +115,9 @@ if(ANDROID)
   set(CMAKE_FIND_LIBRARY_SUFFIXES ".a;.so")
   caffe_enable_cpp11_support()
 endif()
+
+# ---[ Prebuild dependencies on windows
+include(cmake/WindowsDownloadPrebuiltDependencies.cmake)
 
 # ---[ Dependencies
 include(cmake/Dependencies.cmake)
