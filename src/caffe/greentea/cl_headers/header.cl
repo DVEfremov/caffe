@@ -11,7 +11,7 @@
 #define FLT_MIN 0
 #define cl_khr_fp64
 #define cl_amd_fp64
-#define DOUBLE_SUPPORT_AVAILABLE
+#define DOUBLE_SUPPORT_AVAILABLE_DISABLED_EXP2
 #define CLK_LOCAL_MEM_FENCE
 #define CLK_GLOBAL_MEM_FENCE
 #define Dtype float
@@ -32,10 +32,10 @@
 
 #if defined(cl_khr_fp64)
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
-#define DOUBLE_SUPPORT_AVAILABLE
+#define DOUBLE_SUPPORT_AVAILABLE_DISABLED_EXP2
 #elif defined(cl_amd_fp64)
 #pragma OPENCL EXTENSION cl_amd_fp64 : enable
-#define DOUBLE_SUPPORT_AVAILABLE
+#define DOUBLE_SUPPORT_AVAILABLE_DISABLED_EXP3
 #endif
 
 #if defined(cl_khr_int64_base_atomics)

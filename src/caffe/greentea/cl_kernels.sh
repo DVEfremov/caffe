@@ -10,8 +10,8 @@ HEADER='include/caffe/greentea/cl_kernels.hpp'
 INCHEADER='caffe/greentea/cl_kernels.hpp'
 SOURCE='src/caffe/greentea/cl_kernels.cpp'
 
-echo "// AUTOMATICALLY GENERATED FILE, DO NOT EDIT" > $HEADER
-echo "// AUTOMATICALLY GENERATED FILE, DO NOT EDIT" > $SOURCE
+echo "// AUTOMATICALLY GENERATED FILE, DO NOT EDIT updated version" > $HEADER
+echo "// AUTOMATICALLY GENERATED FILE, DO NOT EDIT updated version" > $SOURCE
 echo "#include <string>" >> $HEADER
 echo "#include \"caffe/common.hpp\"" >> $HEADER
 echo "#ifdef USE_GREENTEA" >> $HEADER
